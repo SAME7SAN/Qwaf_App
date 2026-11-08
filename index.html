@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة معالجة واستخراج القوافي الشعرية</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --subtext-color: #a0a0a0;
+            --border-color: #333333;
+            --input-bg: #2a2a2a;
+            --output-bg: #252525;
+            
+            --btn-process: #2980b9;
+            --btn-process-hover: #3498db;
+            --btn-merge: #8e44ad;
+            --btn-merge-hover: #9b59b6;
+            --btn-clear: #c0392b;
+            --btn-clear-hover: #e74c3c;
+            --btn-save: #27ae60;
+            --btn-save-hover: #2ecc71;
+            --btn-theme: #333333;
+            --btn-theme-text: #f1c40f;
+            --btn-theme-border: #444444;
+        }
+
+        body.light-theme {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --subtext-color: #34495e;
+            --border-color: #ccc;
+            --input-bg: #ffffff;
+            --output-bg: #f9f9f9;
+            
+            --btn-process: #3498db;
+            --btn-process-hover: #2980b9;
+            --btn-merge: #9b59b6;
+            --btn-merge-hover: #8e44ad;
+            --btn-clear: #e74c3c;
+            --btn-clear-hover: #c0392b;
+            --btn-save: #2ecc71;
+            --btn-save-hover: #27ae60;
+            --btn-theme: #f0f0f0;
+            --btn-theme-text: #d35400;
+            --btn-theme-border: #dddddd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: background-color 0.3s ease;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .theme-toggle-btn {
+            background-color: var(--btn-theme);
+            color: var(--btn-theme-text);
+            border: 1px solid var(--btn-theme-border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.03);
+        }
+
+        h2.title-head {
+            margin: 0 0 25px 0;
+            color: var(--text-color);
+            text-align: center;
+            font-size: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--subtext-color);
+        }
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            padding: 12px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: var(--btn-process);
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
+        }
+
+        .buttons-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        button.action-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        button.action-btn:active {
+            transform: scale(0.98);
+        }
+
+        #btn-process {
+            background-color: var(--btn-process);
+            color: white;
+        }
+        #btn-process:hover {
+            background-color: var(--btn-process-hover);
+        }
+
+        #btn-merge {
+            background-color: var(--btn-merge);
+            color: white;
+        }
+        #btn-merge:hover {
+            background-color: var(--btn-merge-hover);
+        }
+
+        #btn-clear {
+            background-color: var(--btn-clear);
+            color: white;
+        }
+        #btn-clear:hover {
+            background-color: var(--btn-clear-hover);
+        }
+
+        #btn-save {
+            background-color: var(--btn-save);
+            color: white;
+        }
+        #btn-save:hover {
+            background-color: var(--btn-save-hover);
+        }
+
+        .output-section {
+            margin-top: 20px;
+        }
+
+        #output-area {
+            background-color: var(--output-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 120px;
+            max-height: 250px;
+            overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: var(--text-color);
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-bar">
+        <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">☀️ الوضع الفاتح</button>
+    </div>
+
+    <h2 class="title-head">أداة معالجة واستخراج القوافي الشعرية</h2>
+
+    <label for="input-poems">أدخل الشطرات أو الأبيات الشعرية هنا (أو حدد جزءاً منها فقط للدمج):</label>
+    <textarea id="input-poems" placeholder="مثال للشطرات المتفرقة:
+سلا مصر هل سلا القلب عنها
+أو أسا زمانه أن صفاها
+وسلا مصر هل سقاها المنى
+والوجد أم دمعها جفاها"></textarea>
+
+    <div class="buttons-group">
+        <button class="action-btn" id="btn-merge" onclick="mergeHemistichs()">دمج الشطرات</button>
+        <button class="action-btn" id="btn-process" onclick="extractRhymes()">استخراج القوافي</button>
+        <button class="action-btn" id="btn-clear" onclick="clearAll()">مسح</button>
+        <button class="action-btn" id="btn-save" onclick="saveFile()">حفظ النتائج</button>
+    </div>
+
+    <div class="output-section">
+        <label>النتائج والمخرجات:</label>
+        <div id="output-area"></div>
+    </div>
+</div>
+
+<script>
+    let extractedRhymesList = [];
+
+    // التبديل بين الثيم الداكن والفاتح
+    function toggleTheme() {
+        const body = document.body;
+        const themeBtn = document.getElementById('theme-btn');
+        
+        body.classList.toggle('light-theme');
+        
+        if (body.classList.contains('light-theme')) {
+            themeBtn.textContent = '🌙 الوضع الداكن';
+        } else {
+            themeBtn.textContent = '☀️ الوضع الفاتح';
+        }
+    }
+
+    // دمج الشطرات للكل أو للجزء المحدد فقط
+    function mergeHemistichs() {
+        const inputArea = document.getElementById('input-poems');
+        const start = inputArea.selectionStart;
+        const end = inputArea.selectionEnd;
+        const fullText = inputArea.value;
+
+        let targetText = "";
+        let isSelection = false;
+
+        // التحقق مما إذا كان هناك نص مضلل/محدد
+        if (start !== end) {
+            targetText = fullText.substring(start, end);
+            isSelection = true;
+        } else {
+            targetText = fullText;
+        }
+
+        const lines = targetText.split('\n').map(l => l.trim()).filter(l => l !== '');
+
+        if (lines.length === 0) {
+            alert("الرجاء إدخال أسطر شعرية أو تحديد نص صريح لدمجه.");
+            return;
+        }
+
+        let mergedLines = [];
+        for (let i = 0; i < lines.length; i += 2) {
+            if (i + 1 < lines.length) {
+                mergedLines.push(`${lines[i]}  ...  ${lines[i+1]}`);
+            } else {
+                mergedLines.push(lines[i]);
+            }
+        }
+
+        const mergedResult = mergedLines.join('\n');
+
+        const outputArea = document.getElementById('output-area');
+
+        if (isSelection) {
+            // استبدال الجزء المحدد فقط بالنتيجة المدمجة
+            inputArea.value = fullText.substring(0, start) + mergedResult + fullText.substring(end);
+            outputArea.textContent = "تم دمج الشطرات للنص المحدد فقط بنجاح.";
+        } else {
+            // استبدال الكود كاملاً
+            inputArea.value = mergedResult;
+            outputArea.textContent = "تم دمج جميع الشطرات بنجاح في صندوق الإدخال.";
+        }
+    }
+
+    // استخراج القوافي من نهاية كل بيت/سطر
+    function extractRhymes() {
+        const input = document.getElementById('input-poems').value;
+        const outputArea = document.getElementById('output-area');
+        
+        if (!input.trim()) {
+            outputArea.textContent = "الرجاء إدخال أبيات شعرية أولاً.";
+            extractedRhymesList = [];
+            return;
+        }
+
+        const lines = input.split('\n');
+        extractedRhymesList = [];
+
+        for (let line of lines) {
+            let cleanedLine = line.trim();
+            if (cleanedLine === "") continue;
+
+            // إزالة علامات الترقيم الختامية
+            cleanedLine = cleanedLine.replace(/[.,،؛؟!"'«»()\[\]]/g, '');
+
+            const words = cleanedLine.split(/\s+/);
+            if (words.length > 0) {
+                const lastWord = words[words.length - 1];
+                extractedRhymesList.push(lastWord);
+            }
+        }
+
+        if (extractedRhymesList.length > 0) {
+            outputArea.textContent = extractedRhymesList.join('\n');
+        } else {
+            outputArea.textContent = "لم يتم العثور على كلمات صالحة.";
+        }
+    }
+
+    // مسح الحقول
+    function clearAll() {
+        document.getElementById('input-poems').value = "";
+        document.getElementById('output-area').textContent = "";
+        extractedRhymesList = [];
+    }
+
+    // حفظ النتائج
+    function saveFile() {
+        if (extractedRhymesList.length === 0) {
+            alert("لا توجد قوافي محفوظة للحفظ. يرجى استخراج القوافي أولاً.");
+            return;
+        }
+
+        let fileName = prompt("أدخل اسم الملف المراد حفظه:", "القوافي");
+        if (!fileName) return;
+
+        let fileType = prompt("اختر صيغة الحفظ:\n1 لملف نصي (txt)\n2 لملف جدول إكسل (csv)", "1");
+
+        let content = "";
+        let extension = "";
+        let mimeType = "";
+
+        if (fileType === "2") {
+            content = "\uFEFFالقافية\n" + extractedRhymesList.join("\n");
+            extension = ".csv";
+            mimeType = "text/csv;charset=utf-8;";
+        } else {
+            content = extractedRhymesList.join("\n");
+            extension = ".txt";
+            mimeType = "text/plain;charset=utf-8;";
+        }
+
+        const blob = new Blob([content], { type: mimeType });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName + extension;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+</body>
+</html>
